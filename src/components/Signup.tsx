@@ -335,7 +335,6 @@ const Signup: React.FC = () => {
                                 value={formData.restaurantname}
                                 onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}
                                 onBlur={() => {
-
                                     validateField('restaurantname')
                                     handleTenant()
                                 }}
