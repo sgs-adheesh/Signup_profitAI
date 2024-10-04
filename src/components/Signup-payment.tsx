@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext} from 'react'
 import { DataContext, PaymentForm } from '../context/SignupContext';
 
 
@@ -301,7 +301,8 @@ const Signup_Payment: React.FC = () => {
     return false;
   };
 
-  const formatstringDate = (dateStr:string)=>{
+  
+  const normalizeDateFormat = (dateStr: string)=> {
     const regex = /^(0?[1-9]|1[0-2])\/(\d{2}|\d{4})$/;
     const match = dateStr.match(regex);
 
@@ -319,13 +320,10 @@ const Signup_Payment: React.FC = () => {
     } else {
         year = match[2]; // Keep the four-digit year
     }
-    setPaymentDetails({ ...paymentDetails, expiry: `${month}/${year}`})
+    setPaymentDetails({ ...paymentDetails, expiry: `${month}/${year}` })
+   
+};
   
-  }
-
-  useEffect(()=>{
-    formatstringDate(paymentDetails.expiry)
-  },[paymentDetails.expiry])
   
 
   return (
@@ -395,10 +393,12 @@ const Signup_Payment: React.FC = () => {
                   value={paymentDetails.expiry}
                   onChange={(e)=>{
                     handleDateChange(e)
-                    formatstringDate(e.target.value)
                   }}
                   onFocus={handleInputFocus}
-                  onBlur={() => validateField('expiry')}
+                  onBlur={(e) => {
+                    validateField('expiry')
+                    normalizeDateFormat(e.target.value)
+                  }}
                   className=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  dark:focus:ring-blue-500"
                   placeholder="MM/YYYY"
                 />
