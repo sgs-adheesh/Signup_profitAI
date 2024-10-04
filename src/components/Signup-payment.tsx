@@ -308,17 +308,17 @@ const Signup_Payment: React.FC = () => {
 
     if (!match) {
         console.error("Invalid date format");
-        return null; // Return null for invalid formats
+        return null;
     }
 
-    const month = match[1].padStart(2, '0'); // Ensure month is two digits
+    const month = match[1].padStart(2, '0'); 
     let year: string;
 
     if (match[2].length === 2) {
-        // Convert two-digit year to four-digit year
+       
         year = (parseInt(match[2], 10) >= 50 ? '19' : '20') + match[2];
     } else {
-        year = match[2]; // Keep the four-digit year
+        year = match[2]; 
     }
     setPaymentDetails({ ...paymentDetails, expiry: `${month}/${year}` })
    
