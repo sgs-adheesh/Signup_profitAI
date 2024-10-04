@@ -34,8 +34,8 @@ interface DataContextType {
     setErrors: React.Dispatch<React.SetStateAction<Partial<Record<keyof SignupForm, string>>>>;
     message: boolean | string;
     setMessage: React.Dispatch<React.SetStateAction<boolean | string>>;
-    tenantmessage: string;
-    setenantMessage: React.Dispatch<React.SetStateAction<string>>;
+    tenantMessage: boolean|string;
+    setTenantMessage: React.Dispatch<React.SetStateAction<boolean|string>>;
     navigate: NavigateFunction;
     paymentDetails: PaymentForm;
     setPaymentDetails: React.Dispatch<React.SetStateAction<PaymentForm>>;
@@ -84,7 +84,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const [errors, setErrors] = useState<Partial<Record<keyof SignupForm, string>>>({});
     const [message, setMessage] = useState<boolean | string>(''); // For showing messages
-    const [tenantmessage, setenantMessage] = useState<string>('');
+    const [tenantMessage, setTenantMessage] = useState<string|boolean>('');
     const [reCaptcheError, setReCaptcheError] = useState<string>('')
     const [paymentError, setPaymentError] = useState<Partial<Record<keyof PaymentForm, string>>>({});
 
@@ -98,7 +98,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             formData, setFormData,
             errors, setErrors,
             message, setMessage,
-            tenantmessage, setenantMessage,
+            tenantMessage, setTenantMessage,
             navigate,
             paymentDetails, setPaymentDetails,
             paymentError, setPaymentError,

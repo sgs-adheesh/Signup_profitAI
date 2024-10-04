@@ -21,7 +21,7 @@ const Signup: React.FC = () => {
         formData, setFormData,
         errors, setErrors,
         message, setMessage,
-        tenantmessage, setenantMessage,
+        tenantMessage, setTenantMessage,
         navigate,
         logo, handIcon,
         // axios,API_URL,
@@ -179,7 +179,7 @@ const Signup: React.FC = () => {
     }
     const handleTenant = async () => {
         if (errors.restaurantname || formData.restaurantname === '') {
-            setenantMessage('')
+            setTenantMessage('')
             return;
         }
 
@@ -187,18 +187,21 @@ const Signup: React.FC = () => {
             const response = await axios.post('http://localhost:8090/api/v1/test/check', {
                 name: formData.restaurantname
             });
-
-
-
-            if (response.data.message == false) {
-                setenantMessage("Restaurant Name Already Exists")
+            //const data=true;
+            
+            if (response.data.message===false) {
+                setTenantMessage(false)
             }
-            else
-                setenantMessage("Restaurant Name is Valid")
+            else if(response.data.message===true){
+                setTenantMessage(true)
+            }
+            else{
+                setTenantMessage('')
+            }
 
         } catch (error) {
             console.error('Error applying name', error);
-            setenantMessage('An error occurred while applying the restaurant name. Please try again.');
+            setTenantMessage('An error occurred while applying the restaurant name. Please try again.');
         }
     }
 
@@ -342,9 +345,13 @@ const Signup: React.FC = () => {
                                 className=" border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  dark:focus:ring-blue-500"
                                 placeholder="The Gourmet Grill"
                             />
-                            {tenantmessage ?
-                                <span className="text-sm text-gray-500 dark:text-gray-400">
-                                    {tenantmessage}
+                            {tenantMessage===false ?
+                                <span className="text-sm text-red-500 dark:text-gray-400">
+                                    Restaurant name already existing
+                                </span>
+                                :tenantMessage===true ?
+                                <span className="text-sm text-green-500 dark:text-gray-400">
+                                    Restaurant Name is Valid
                                 </span>
                                 :
                                 ''}
