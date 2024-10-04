@@ -44,6 +44,7 @@ const Signup_Payment: React.FC = () => {
         }
         break;
       case 'expiry':
+        
         if (!paymentDetails.expiry) {
           newErrors.expiry = "Expiry date is required.";
         } else if (!/^(0?[1-9]|1[0-2])\/([0-9]{2}|[0-9]{4})$/.test(paymentDetails.expiry)) {
@@ -316,13 +317,18 @@ const Signup_Payment: React.FC = () => {
 
     if (match[2].length === 2) {
        
-        year = (parseInt(match[2], 10) >= 50 ? '19' : '20') + match[2];
+        year = '20' + match[2];
     } else {
         year = match[2]; 
     }
+
     setPaymentDetails({ ...paymentDetails, expiry: `${month}/${year}` })
+    
+    
    
 };
+
+
   
   
 
@@ -396,8 +402,8 @@ const Signup_Payment: React.FC = () => {
                   }}
                   onFocus={handleInputFocus}
                   onBlur={(e) => {
-                    validateField('expiry')
-                    normalizeDateFormat(e.target.value)
+                    validateField('expiry')  
+                    normalizeDateFormat(e.target.value)                 
                   }}
                   className=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  dark:focus:ring-blue-500"
                   placeholder="MM/YYYY"
