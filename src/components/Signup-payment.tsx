@@ -217,7 +217,6 @@ const Signup_Payment: React.FC = () => {
           city:paymentDetails.city,
           state:paymentDetails.state,
           zipCode:paymentDetails.zip,
-
         });
 
 
@@ -233,6 +232,7 @@ const Signup_Payment: React.FC = () => {
 
     } catch (error) {
         console.error('Error posting tenant details', error);
+        setPostMessage("Something went wrong")
     }
       
     }
@@ -378,7 +378,10 @@ const Signup_Payment: React.FC = () => {
                   spellCheck="false"
                   value={paymentDetails.cardno}
                   onChange={handleInputChange}
-                  onBlur={() => validateField('cardno')}
+                  onBlur={() => {
+                    validateField('cardno')
+                    //setPaymentDetails({ ...paymentDetails, [e.target.name]: e.target.value.replace(/\D/g, '')})
+                  }}
                   onFocus={handleInputFocus}
                   className=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
                   placeholder="1234 4567 6789 9876"
@@ -399,7 +402,9 @@ const Signup_Payment: React.FC = () => {
                   value={paymentDetails.name}
                   onChange={(e) => setPaymentDetails({ ...paymentDetails, [e.target.name]: e.target.value.toUpperCase() })}
                   onFocus={handleInputFocus}
-                  onBlur={() => validateField('name')}
+                  onBlur={() => validateField('name')
+
+                  }
                   className=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  dark:focus:ring-blue-500"
                   placeholder="Scout Lawrence"
                 />
@@ -601,9 +606,8 @@ const Signup_Payment: React.FC = () => {
                 <span className="text-sm text-red-500 dark:text-gray-400">
                         Unable to store details
                 </span> :
-              postMessage===''?'':
                 <span className="text-sm text-red-500 dark:text-gray-400">
-                        Something went wrong
+                        {postMessage}
                 </span> 
               }
             </div>
