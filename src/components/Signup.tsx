@@ -37,6 +37,7 @@ const Signup: React.FC = () => {
     //for reflecting the tele value changes into formData
     useEffect(() => {
         setFormData({ ...formData, phone: tele })
+        
     }, [tele, setTele])
 
 
@@ -207,7 +208,8 @@ const Signup: React.FC = () => {
     //form submission, it redirect to the payment page
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        setFormData({ ...formData, phone: tele });
+        const formattedPhone = tele ? tele.replace(/^\+1/, '') : '';
+        setFormData({ ...formData, phone: formattedPhone });
         if (validate()) {
             console.log(formData)
             if (executeRecaptcha) {
