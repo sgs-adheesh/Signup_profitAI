@@ -36,6 +36,8 @@ interface DataContextType {
     setMessage: React.Dispatch<React.SetStateAction<boolean | string>>;
     tenantMessage: boolean|string;
     setTenantMessage: React.Dispatch<React.SetStateAction<boolean|string>>;
+    postMessage:boolean|string;
+    setPostMessage:React.Dispatch<React.SetStateAction<boolean|string>>;
     navigate: NavigateFunction;
     paymentDetails: PaymentForm;
     setPaymentDetails: React.Dispatch<React.SetStateAction<PaymentForm>>;
@@ -48,7 +50,7 @@ interface DataContextType {
     API_URL: string;
     reCaptcheError: string;
     setReCaptcheError: React.Dispatch<React.SetStateAction<string>>;
-    SITE_KEY: object;
+    // SITE_KEY: object;
 
 
 }
@@ -56,7 +58,7 @@ interface DataContextType {
 export const DataContext = createContext<DataContextType | undefined>(undefined);
 
 
-const site_key = '6LcpeVQqAAAAACczaEFPePOgStVqHCBzGzUy_OF8';
+// const site_key = '6LcpeVQqAAAAACczaEFPePOgStVqHCBzGzUy_OF8';
 
 export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [formData, setFormData] = useState<SignupForm>({
@@ -85,13 +87,14 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [errors, setErrors] = useState<Partial<Record<keyof SignupForm, string>>>({});
     const [message, setMessage] = useState<boolean | string>(''); // For showing messages
     const [tenantMessage, setTenantMessage] = useState<string|boolean>('');
+    const [postMessage,setPostMessage] = useState<string|boolean>('');
     const [reCaptcheError, setReCaptcheError] = useState<string>('')
     const [paymentError, setPaymentError] = useState<Partial<Record<keyof PaymentForm, string>>>({});
 
     const navigate = useNavigate()
 
-    const API_URL = 'base_URL'
-    const SITE_KEY = { site_key }
+    const API_URL = 'http://localhost:8090/api/v1'
+    // const SITE_KEY = { site_key }
 
     return (
         <DataContext.Provider value={{
@@ -99,13 +102,14 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             errors, setErrors,
             message, setMessage,
             tenantMessage, setTenantMessage,
+            postMessage,setPostMessage,
             navigate,
             paymentDetails, setPaymentDetails,
             paymentError, setPaymentError,
             logo, handIcon, paymentIcon,
             axios, API_URL,
             reCaptcheError, setReCaptcheError,
-            SITE_KEY
+            // SITE_KEY
         }}>
 
             {children}

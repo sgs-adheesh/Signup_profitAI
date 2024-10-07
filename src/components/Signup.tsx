@@ -3,7 +3,7 @@ import Input from 'react-phone-number-input/input';
 import { DataContext, SignupForm } from '../context/SignupContext';
 import 'react-phone-number-input/style.css'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
-import axios from 'axios'
+
 
 
 const Signup: React.FC = () => {
@@ -24,7 +24,7 @@ const Signup: React.FC = () => {
         tenantMessage, setTenantMessage,
         navigate,
         logo, handIcon,
-        // axios,API_URL,
+        axios,API_URL,
         reCaptcheError, setReCaptcheError
     } = context
 
@@ -157,7 +157,7 @@ const Signup: React.FC = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:8090/api/v1/test/apply', {
+            const response = await axios.post(`${API_URL}/test/apply`, {
                 discountCode: formData.discount
             });
 
@@ -174,7 +174,6 @@ const Signup: React.FC = () => {
 
         } catch (error) {
             console.error('Error applying discount:', error);
-            setMessage('An error occurred while applying the discount. Please try again.');
         }
     }
     const handleTenant = async () => {
@@ -184,7 +183,7 @@ const Signup: React.FC = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:8090/api/v1/test/check', {
+            const response = await axios.post(`${API_URL}/test/check`, {
                 name: formData.restaurantname
             });
             //const data=true;
@@ -201,7 +200,7 @@ const Signup: React.FC = () => {
 
         } catch (error) {
             console.error('Error applying name', error);
-            setTenantMessage('An error occurred while applying the restaurant name. Please try again.');
+            
         }
     }
 

@@ -13,7 +13,9 @@ const Signup_Payment: React.FC = () => {
     paymentDetails, setPaymentDetails,
     paymentError, setPaymentError,
     logo,handIcon,paymentIcon,
-    // axios,API_URL
+    formData,
+    axios,API_URL,
+    postMessage,setPostMessage
   } = context;
 
     //validation of each field after press tab/switch field
@@ -206,14 +208,32 @@ const Signup_Payment: React.FC = () => {
     if (validate()) {
       console.log(paymentDetails)
       try {
-        
-        
-        // const response = await axios.post(`${API_URL}/signup/payment`, paymentDetails);
-        // console.log('Success:', response.data);
-      }
-      catch (error) {
-          console.error('Error:', error);
-      }
+        const response = await axios.post(`${API_URL}/test/tenants`, {
+          name: formData.restaurantname,
+          phone:formData.phone,
+          businessName:paymentDetails.business_name,
+          addressLineOne:paymentDetails.address1,
+          addressLineTwo:paymentDetails.address2,
+          city:paymentDetails.city,
+          state:paymentDetails.state,
+          zipCode:paymentDetails.zip,
+
+        });
+
+
+        if (response.data.message == true) {
+            setPostMessage(true)
+        }
+        else if (response.data.message == false) {
+            setPostMessage(false)
+        }
+        else {
+            setPostMessage('')
+        }
+
+    } catch (error) {
+        console.error('Error posting tenant details', error);
+    }
       
     }
   }
@@ -571,6 +591,22 @@ const Signup_Payment: React.FC = () => {
               </div>
             </div>
             <div className="clear-both"></div>
+            <div>
+            
+              {postMessage===true?
+                <span className="text-sm text-green-500 dark:text-gray-400">
+                        Tenant details stored
+                </span> :
+              postMessage===false?
+                <span className="text-sm text-red-500 dark:text-gray-400">
+                        Unable to store details
+                </span> :
+              postMessage===''?'':
+                <span className="text-sm text-red-500 dark:text-gray-400">
+                        Something went wrong
+                </span> 
+              }
+            </div>
             <div className="border-t-[1px] border-gray-200 mt-10 pt-5">
               <div className=" float-left content-center justify-between w-full flex">
                 <button type="submit" className="text-white bg-blue-500 hover:bg-blue-700 font-medium rounded-lg text-sm px-7 w-[200px] py-3 text-center float-left">Next</button>
