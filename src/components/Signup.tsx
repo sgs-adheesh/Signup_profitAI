@@ -24,7 +24,7 @@ const Signup: React.FC = () => {
         tenantMessage, setTenantMessage,
         navigate,
         logo, handIcon,
-        axios,API_URL,
+        axios, API_URL,
         reCaptcheError, setReCaptcheError
     } = context
 
@@ -37,12 +37,12 @@ const Signup: React.FC = () => {
     //for reflecting the tele value changes into formData
     useEffect(() => {
         setFormData({ ...formData, phone: tele })
-        
+
     }, [tele, setTele])
 
 
     //for validating all the input formats while submit
-    const validate = (): boolean => {
+    const Firstvalidate = (): boolean => {
 
         const newErrors: Partial<Record<keyof SignupForm, string>> = {};
         const phonePattern = /^[0-9]*$/;
@@ -153,7 +153,7 @@ const Signup: React.FC = () => {
     //for handling discount, to check whether the discount code is valid or not
     const handleDiscount = async () => {
         if (!formData.discount) {
-            setMessage('Please enter a discount code');
+            setMessage('');
             return;
         }
 
@@ -189,21 +189,21 @@ const Signup: React.FC = () => {
                 name: formData.restaurantname
             });
             //const data=true;
-            
-            if (response.data.message===false) {
+
+            if (response.data.message === false) {
                 setTenantMessage(false)
             }
-            else if(response.data.message===true){
+            else if (response.data.message === true) {
                 setTenantMessage(true)
             }
-            else{
+            else {
                 setTenantMessage('')
             }
 
         } catch (error) {
             console.error('Error applying name', error);
             setTenantMessage('Something went wrong')
-            
+
         }
     }
 
@@ -212,7 +212,7 @@ const Signup: React.FC = () => {
         e.preventDefault()
         const formattedPhone = tele ? tele.replace(/^\+1/, '') : '';
         setFormData({ ...formData, phone: formattedPhone });
-        if (validate()) {
+        if (Firstvalidate()) {
             console.log(formData)
             if (executeRecaptcha) {
                 const token = await executeRecaptcha('signup_form');
@@ -347,19 +347,19 @@ const Signup: React.FC = () => {
                                 className=" border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  dark:focus:ring-blue-500"
                                 placeholder="The Gourmet Grill"
                             />
-                            {tenantMessage===false ?
+                            {tenantMessage === false ?
                                 <span className="text-sm text-red-500 dark:text-gray-400">
                                     Restaurant name already existing
                                 </span>
-                                :tenantMessage===true ?
-                                <span className="text-sm text-green-500 dark:text-gray-400">
-                                    Restaurant Name is Valid
-                                </span>
-                                :
-                                <span className="text-sm text-red-500 dark:text-gray-400">
-                                    {tenantMessage}
-                                </span>
-                                }
+                                : tenantMessage === true ?
+                                    <span className="text-sm text-green-500 dark:text-gray-400">
+
+                                    </span>
+                                    :
+                                    <span className="text-sm text-red-500 dark:text-gray-400">
+                                        {tenantMessage}
+                                    </span>
+                            }
                             {errors.restaurantname && <span className="text-sm text-red-500 dark:text-gray-400">{errors.restaurantname}</span>}
                         </div>
 
