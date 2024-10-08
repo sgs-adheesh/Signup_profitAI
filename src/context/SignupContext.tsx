@@ -1,5 +1,5 @@
 import React, { createContext, useState, ReactNode } from 'react';
-import { useNavigate,NavigateFunction} from 'react-router-dom';
+import { useNavigate, NavigateFunction } from 'react-router-dom';
 import logo from '../img/logo-full.svg';
 import handIcon from "../img/hand-icon.svg";
 import paymentIcon from "../img/payment.svg"
@@ -15,46 +15,50 @@ export interface SignupForm {
     discount: string;
 }
 export interface PaymentForm {
-    cardno:string;
-    name:string;
-    expiry:string;
-    cvv:number;
-    focus:string;
-    business_name:string;
-    address1:string;
-    address2:string;
-    city:string;
-    state:string;
-    zip:number;
+    cardno: string;
+    name: string;
+    expiry: string;
+    cvv: number;
+    focus: string;
+    business_name: string;
+    address1: string;
+    address2: string;
+    city: string;
+    state: string;
+    zip: number;
 }
 interface DataContextType {
     formData: SignupForm;
     setFormData: React.Dispatch<React.SetStateAction<SignupForm>>;
     errors: Partial<Record<keyof SignupForm, string>>;
     setErrors: React.Dispatch<React.SetStateAction<Partial<Record<keyof SignupForm, string>>>>;
-    message: boolean|string;
-    setMessage: React.Dispatch<React.SetStateAction<boolean|string>>;
+    message: boolean | string;
+    setMessage: React.Dispatch<React.SetStateAction<boolean | string>>;
+    tenantMessage: boolean|string;
+    setTenantMessage: React.Dispatch<React.SetStateAction<boolean|string>>;
+    postMessage:boolean|string;
+    setPostMessage:React.Dispatch<React.SetStateAction<boolean|string>>;
     navigate: NavigateFunction;
-    paymentDetails:PaymentForm;
-    setPaymentDetails:React.Dispatch<React.SetStateAction<PaymentForm>>;
-    paymentError:Partial<Record<keyof PaymentForm, string>>;
-    setPaymentError:React.Dispatch<React.SetStateAction<Partial<Record<keyof PaymentForm, string>>>>;
+    paymentDetails: PaymentForm;
+    setPaymentDetails: React.Dispatch<React.SetStateAction<PaymentForm>>;
+    paymentError: Partial<Record<keyof PaymentForm, string>>;
+    setPaymentError: React.Dispatch<React.SetStateAction<Partial<Record<keyof PaymentForm, string>>>>;
     logo: string;
     handIcon: string;
     paymentIcon: string;
-    axios:AxiosInstance;
-    API_URL:string;
-    reCaptcheError:string;
-    setReCaptcheError:React.Dispatch<React.SetStateAction<string>>;
-    SITE_KEY:object;
-    
+    axios: AxiosInstance;
+    API_URL: string;
+    reCaptcheError: string;
+    setReCaptcheError: React.Dispatch<React.SetStateAction<string>>;
+    // SITE_KEY: object;
+
 
 }
 
 export const DataContext = createContext<DataContextType | undefined>(undefined);
 
 
-const site_key = '6LcpeVQqAAAAACczaEFPePOgStVqHCBzGzUy_OF8';
+// const site_key = '6LcpeVQqAAAAACczaEFPePOgStVqHCBzGzUy_OF8';
 
 export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [formData, setFormData] = useState<SignupForm>({
@@ -66,44 +70,48 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         discount: '',
     });
 
-    const [paymentDetails,setPaymentDetails] = useState<PaymentForm>({
-        cardno:'',
-        name:'',
-        expiry:'',
-        cvv:0,
+    const [paymentDetails, setPaymentDetails] = useState<PaymentForm>({
+        cardno: '',
+        name: '',
+        expiry: '',
+        cvv: 0,
         focus: '' as 'number' | 'expiry' | 'cvc' | 'name' | '',
-        business_name:'',
-        address1:'',
-        address2:'',
-        city:'',
-        state:'',
-        zip:0,
+        business_name: '',
+        address1: '',
+        address2: '',
+        city: '',
+        state: '',
+        zip: 0,
     })
 
     const [errors, setErrors] = useState<Partial<Record<keyof SignupForm, string>>>({});
-    const [message, setMessage] = useState<boolean|string>(''); // For showing messages
-    const [reCaptcheError,setReCaptcheError] = useState<string>('')
-    const [paymentError,setPaymentError] = useState<Partial<Record<keyof PaymentForm, string>>>({});
+    const [message, setMessage] = useState<boolean | string>(''); // For showing messages
+    const [tenantMessage, setTenantMessage] = useState<string|boolean>('');
+    const [postMessage,setPostMessage] = useState<string|boolean>('');
+    const [reCaptcheError, setReCaptcheError] = useState<string>('')
+    const [paymentError, setPaymentError] = useState<Partial<Record<keyof PaymentForm, string>>>({});
 
     const navigate = useNavigate()
 
-    const API_URL = 'base_URL'
-    const SITE_KEY ={site_key}
+    const API_URL = 'http://localhost:8090/api/v1'
+    // const SITE_KEY = { site_key }
 
     return (
-        <DataContext.Provider value={{ 
-            formData, setFormData, 
-            errors, setErrors, 
+        <DataContext.Provider value={{
+            formData, setFormData,
+            errors, setErrors,
             message, setMessage,
-            navigate, 
-            paymentDetails,setPaymentDetails,
-            paymentError,setPaymentError,
-            logo,handIcon,paymentIcon,
-            axios,API_URL,
-            reCaptcheError,setReCaptcheError,
-            SITE_KEY
+            tenantMessage, setTenantMessage,
+            postMessage,setPostMessage,
+            navigate,
+            paymentDetails, setPaymentDetails,
+            paymentError, setPaymentError,
+            logo, handIcon, paymentIcon,
+            axios, API_URL,
+            reCaptcheError, setReCaptcheError,
+            // SITE_KEY
         }}>
-            
+
             {children}
         </DataContext.Provider>
     );

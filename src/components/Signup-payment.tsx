@@ -1,10 +1,19 @@
 import React, { useContext, useEffect } from 'react'
 import { DataContext, PaymentForm } from '../context/SignupContext';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 
 
 const Signup_Payment: React.FC = () => {
 
+  useEffect(()=>{
+    if(!formData.restaurantname || !formData.phone){
+      navigate('/signup')
+    }
+  })
   const context = useContext(DataContext);
   if (!context) {
     throw new Error("YourComponent must be used within a DataProvider");
@@ -12,11 +21,13 @@ const Signup_Payment: React.FC = () => {
   const {
     paymentDetails, setPaymentDetails,
     paymentError, setPaymentError,
-    logo,handIcon,paymentIcon,
-    // axios,API_URL
+    logo, handIcon, paymentIcon,
+    formData,
+    axios, API_URL,
+    navigate
   } = context;
 
-    //validation of each field after press tab/switch field
+  //validation of each field after press tab/switch field
   const validateField = (fieldName: keyof PaymentForm): boolean => {
 
     const newErrors: Partial<Record<keyof PaymentForm, string>> = {};
@@ -33,10 +44,10 @@ const Signup_Payment: React.FC = () => {
         if (!paymentDetails.name) {
           newErrors.name = "Name on card is required.";
         }
-        else if (!/^[A-Za-z\s]+$/.test(paymentDetails.name)){
+        else if (!/^[A-Za-z\s]+$/.test(paymentDetails.name)) {
           newErrors.name = 'Invalid name';
         }
-        else if(paymentDetails.name.length<3){
+        else if (paymentDetails.name.length < 3) {
           newErrors.name = 'Name should contain atleast 3 letters';
         }
         else {
@@ -44,13 +55,14 @@ const Signup_Payment: React.FC = () => {
         }
         break;
       case 'expiry':
+
         if (!paymentDetails.expiry) {
           newErrors.expiry = "Expiry date is required.";
         } else if (!/^(0?[1-9]|1[0-2])\/([0-9]{2}|[0-9]{4})$/.test(paymentDetails.expiry)) {
-          newErrors.expiry = "Expiry date must be in MM/YYYY format.";
+          newErrors.expiry = "Month range should be in 01 to 12";
         }
-        else if(!isValidFutureDate(paymentDetails.expiry)){
-          newErrors.expiry =  "Please enter a future date"
+        else if (!isValidFutureDate(paymentDetails.expiry)) {
+          newErrors.expiry = "Please enter a future date"
         }
         else {
           newErrors.expiry = ''
@@ -61,7 +73,7 @@ const Signup_Payment: React.FC = () => {
           newErrors.cvv = "CVV is required.";
         } else if (!/^\d{3}$/.test(paymentDetails.cvv.toString())) {
           newErrors.cvv = "CVV must be 3 digits.";
-        } else if (!/^(?!000)\d{3}$/.test(paymentDetails.cvv.toString())){
+        } else if (!/^(?!000)\d{3}$/.test(paymentDetails.cvv.toString())) {
           newErrors.cvv = "Invalid CVV"
         }
         else {
@@ -72,9 +84,9 @@ const Signup_Payment: React.FC = () => {
         if (!paymentDetails.business_name) {
           newErrors.business_name = "Business name is required.";
         }
-        else if (!/^[A-Za-z\s]+$/.test(paymentDetails.business_name)){
-          newErrors.business_name = 'Invalid name';
-        }else if(paymentDetails.business_name.length<3){
+        else if (!/^[a-z]|\d?[a-zA-Z0-9]?[a-zA-Z0-9\s&@.,'"]+$/.test(paymentDetails.business_name)) {
+          newErrors.business_name = 'Invalid business name';
+        } else if (paymentDetails.business_name.length < 3) {
           newErrors.business_name = 'Business name should contain atleast 3 letters';
         }
         else {
@@ -109,7 +121,7 @@ const Signup_Payment: React.FC = () => {
         if (!paymentDetails.zip) {
           newErrors.zip = "Zip code is required.";
         } else if (!/^(?!0{5})(?!.*-0{4})(\d{5}(-\d{4})?)$/.test(paymentDetails.zip.toString())) {
-          newErrors.zip = "Zip code must be in standard format";
+          newErrors.zip = "Zip code format is 12345 or 12345-6789";
         }
         else {
           newErrors.zip = ''
@@ -125,7 +137,7 @@ const Signup_Payment: React.FC = () => {
 
 
 
- //form validation while submit
+  //form validation while submit
   const validate = (): boolean => {
     const newErrors: Partial<Record<keyof PaymentForm, string>> = {};
 
@@ -139,10 +151,10 @@ const Signup_Payment: React.FC = () => {
     if (!paymentDetails.name) {
       newErrors.name = "Name on card is required.";
     }
-    if (!/^[A-Za-z\s]+$/.test(paymentDetails.name)){
+    if (!/^[A-Za-z\s]+$/.test(paymentDetails.name)) {
       newErrors.name = 'Invalid name';
     }
-    if(paymentDetails.name.length<3){
+    if (paymentDetails.name.length < 3) {
       newErrors.name = 'Name should contain atleast 3 letters';
     }
 
@@ -150,28 +162,28 @@ const Signup_Payment: React.FC = () => {
       newErrors.expiry = "Expiry date is required.";
     }
     if (!/^(0?[1-9]|1[0-2])\/([0-9]{2}|[0-9]{4})$/.test(paymentDetails.expiry)) {
-      newErrors.expiry = "Expiry date must be in MM/YYYY format.";
+      newErrors.expiry ="Month range should be in 01 to 12";
     }
-    if(!isValidFutureDate(paymentDetails.expiry)){
-      newErrors.expiry =  "Please enter a future date"
+    if (!isValidFutureDate(paymentDetails.expiry)) {
+      newErrors.expiry = "Please enter a future date"
     }
 
     if (!paymentDetails.cvv) {
       newErrors.cvv = "CVV is required.";
-    } 
+    }
     if (!/^\d{3}$/.test(paymentDetails.cvv.toString())) {
       newErrors.cvv = "CVV must be 3 digits.";
-    } 
-    if (!/^(?!000)\d{3}$/.test(paymentDetails.cvv.toString())){
-          newErrors.cvv = "Invalid CVV"
+    }
+    if (!/^(?!000)\d{3}$/.test(paymentDetails.cvv.toString())) {
+      newErrors.cvv = "Invalid CVV"
     }
     if (!paymentDetails.business_name) {
       newErrors.business_name = "Business name is required.";
     }
-    if (!/^[A-Za-z\s]+$/.test(paymentDetails.business_name)){
-      newErrors.business_name = 'Invalid name';
+    if (!/^[a-z]|\d?[a-zA-Z0-9]?[a-zA-Z0-9\s&@.,'"]+$/.test(paymentDetails.business_name)) {
+      newErrors.business_name = 'Invalid business name';
     }
-    if(paymentDetails.business_name.length<3){
+    if (paymentDetails.business_name.length < 3) {
       newErrors.business_name = 'Business name should contain atleast 3 letters';
     }
 
@@ -189,9 +201,9 @@ const Signup_Payment: React.FC = () => {
 
     if (!paymentDetails.zip) {
       newErrors.zip = "Zip code is required.";
-    } 
+    }
     if (!/^(?!0{5})(?!.*-0{4})(\d{5}(-\d{4})?)$/.test(paymentDetails.zip.toString())) {
-      newErrors.zip = "Zip code must be in standard format";
+      newErrors.zip ="Zip code format is 12345 or 12345-6789";
     }
 
 
@@ -200,20 +212,38 @@ const Signup_Payment: React.FC = () => {
   };
 
   //for handling the submit
-  const handlePaymentSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+  const handlePaymentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (validate()) {
       console.log(paymentDetails)
       try {
-        
-        
-        // const response = await axios.post(`${API_URL}/signup/payment`, paymentDetails);
-        // console.log('Success:', response.data);
-      }
-      catch (error) {
-          console.error('Error:', error);
-      }
+        const response = await axios.post(`${API_URL}/test/tenants`, {
+          name: formData.restaurantname,
+          phone: formData.phone,
+          businessName: paymentDetails.business_name,
+          addressLineOne: paymentDetails.address1,
+          addressLineTwo: paymentDetails.address2,
+          city: paymentDetails.city,
+          state: paymentDetails.state,
+          zipCode: paymentDetails.zip,
+        });
+        if(response.data.message){
+          toast.success("Details submitted successfully, You`ll receive a confirmation mail with login credentials", {
+            position: "top-center", 
+            autoClose: false,
+          });
+        }                
       
+
+      } catch (error) {
+        console.error('Error posting tenant details', error);
+        toast.error("Submission failed. Please try again.", {
+          position: "top-center",
+          autoClose:false, 
+        });
+
+      }
+
     }
   }
 
@@ -239,61 +269,61 @@ const Signup_Payment: React.FC = () => {
   }
 
   //for date formatting
-  const handleDateChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     const formattedValue = formatDate(value);
     setPaymentDetails({ ...paymentDetails, [e.target.name]: formattedValue })
-    
+
 
     // Validate if the date is a future date
     if (isValidFutureDate(formattedValue)) {
-      setPaymentError({...paymentError,expiry:""})
+      setPaymentError({ ...paymentError, expiry: "" })
     } else {
-      setPaymentError({...paymentError,expiry:"Please enter a future date"})
+      setPaymentError({ ...paymentError, expiry: "Please enter a future date" })
     }
   };
 
-  const formatDate = (value:string) => {
+  const formatDate = (value: string) => {
     const digits = value.replace(/\D/g, '');
     let formatted = '';
 
-    
+
     if (digits.length <= 2) {
-      formatted = digits;  
+      formatted = digits;
     } else if (digits.length <= 3) {
       formatted = `${digits.slice(0, 1)}/${digits.slice(1)}`;
     } else if (digits.length <= 4) {
-      formatted = `${digits.slice(0, 2)}/${digits.slice(2)}`; 
+      formatted = `${digits.slice(0, 2)}/${digits.slice(2)}`;
     } else if (digits.length <= 5) {
-      formatted = `${digits.slice(0, 1)}/${digits.slice(1)}`; 
+      formatted = `${digits.slice(0, 1)}/${digits.slice(1)}`;
     } else if (digits.length <= 6) {
-      formatted = `${digits.slice(0, 2)}/${digits.slice(2)}`; 
+      formatted = `${digits.slice(0, 2)}/${digits.slice(2)}`;
     }
     else {
-      formatted = `${digits.slice(0, 2)}/${digits.slice(2, 6)}`; 
+      formatted = `${digits.slice(0, 2)}/${digits.slice(2, 6)}`;
     }
 
-    if(formatted==='00/0000'){
-      formatted=''
+    if (formatted === '00/0000') {
+      formatted = ''
     }
 
     return formatted;
   };
 
-  const isValidFutureDate = (value:string) => {
-    
+  const isValidFutureDate = (value: string) => {
+
     const parts = value.split('/');
     if (parts.length < 2) return false;
 
     const month = parseInt(parts[0], 10);
     const year = parts[1].length === 2 ? 2000 + parseInt(parts[1], 10) : parseInt(parts[1], 10);
 
-    
+
     const now = new Date();
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth() + 1;
 
-   
+
     if (year > currentYear || (year === currentYear && month > currentMonth)) {
       return true;
     }
@@ -301,40 +331,43 @@ const Signup_Payment: React.FC = () => {
     return false;
   };
 
-  const formatstringDate = (dateStr:string)=>{
+
+  const normalizeDateFormat = (dateStr: string) => {
     const regex = /^(0?[1-9]|1[0-2])\/(\d{2}|\d{4})$/;
     const match = dateStr.match(regex);
 
     if (!match) {
-        console.error("Invalid date format");
-        return null; // Return null for invalid formats
+      console.error("Invalid date format");
+      return null;
     }
 
-    const month = match[1].padStart(2, '0'); // Ensure month is two digits
+    const month = match[1].padStart(2, '0');
     let year: string;
 
     if (match[2].length === 2) {
-        // Convert two-digit year to four-digit year
-        year = (parseInt(match[2], 10) >= 50 ? '19' : '20') + match[2];
-    } else {
-        year = match[2]; // Keep the four-digit year
-    }
-    setPaymentDetails({ ...paymentDetails, expiry: `${month}/${year}`})
-  
-  }
 
-  useEffect(()=>{
-    formatstringDate(paymentDetails.expiry)
-  },[paymentDetails.expiry])
-  
+      year = '20' + match[2];
+    } else {
+      year = match[2];
+    }
+
+    setPaymentDetails({ ...paymentDetails, expiry: `${month}/${year}` })
+
+
+
+  };
+
+
+
+
 
   return (
     <div className="bg-[url('img/login-bg.jpg')] bg-cover ">
       <section className="flex flex-col items-center w-full">
         <img src={logo} className="w-[200px] mt-[50px] mb-[50px]" alt="Profit AI Logo" />
-        <div className="bg-white w-[850px] drop-shadow-xl rounded p-[45px]"><p className="text-sm text-left text-[#757575]">Welcome! <img className="inline-block mt-[-4px] ml-[2px]" src={handIcon} alt='bg-white'/></p>
+        <div className="bg-white w-[850px] drop-shadow-xl rounded p-[45px]"><p className="text-sm text-left text-[#757575]">Welcome! <img className="inline-block mt-[-4px] ml-[2px]" src={handIcon} alt='bg-white' /></p>
           <p className="text-2xl font-bold text-left text-[#333] mt-[5px] mb-6 float-left">Sign up for your Profit AI</p>
-          <img src={paymentIcon} className="mb-4 float-right" alt='payment'/>
+          <img src={paymentIcon} className="mb-4 float-right" alt='payment' />
           <div className="clear-both"></div>
 
           <form onSubmit={handlePaymentSubmit} className="space-y-4 md:space-y-6 w-full" action="#">
@@ -354,7 +387,10 @@ const Signup_Payment: React.FC = () => {
                   spellCheck="false"
                   value={paymentDetails.cardno}
                   onChange={handleInputChange}
-                  onBlur={() => validateField('cardno')}
+                  onBlur={() => {
+                    validateField('cardno')
+                    //setPaymentDetails({ ...paymentDetails, [e.target.name]: e.target.value.replace(/\D/g, '')})
+                  }}
                   onFocus={handleInputFocus}
                   className=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
                   placeholder="1234 4567 6789 9876"
@@ -373,9 +409,11 @@ const Signup_Payment: React.FC = () => {
                   name="name"
                   id="name"
                   value={paymentDetails.name}
-                  onChange={(e) => setPaymentDetails({ ...paymentDetails, [e.target.name]: e.target.value.toUpperCase() })}
+                  onChange={(e) => setPaymentDetails({ ...paymentDetails, [e.target.name]: e.target.value})}
                   onFocus={handleInputFocus}
-                  onBlur={() => validateField('name')}
+                  onBlur={() => validateField('name')
+
+                  }
                   className=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  dark:focus:ring-blue-500"
                   placeholder="Scout Lawrence"
                 />
@@ -393,12 +431,14 @@ const Signup_Payment: React.FC = () => {
                   name="expiry"
                   id="expiry"
                   value={paymentDetails.expiry}
-                  onChange={(e)=>{
+                  onChange={(e) => {
                     handleDateChange(e)
-                    formatstringDate(e.target.value)
                   }}
                   onFocus={handleInputFocus}
-                  onBlur={() => validateField('expiry')}
+                  onBlur={(e) => {
+                    validateField('expiry')
+                    normalizeDateFormat(e.target.value)
+                  }}
                   className=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  dark:focus:ring-blue-500"
                   placeholder="MM/YYYY"
                 />
@@ -565,20 +605,22 @@ const Signup_Payment: React.FC = () => {
               </div>
             </div>
             <div className="clear-both"></div>
+            <div>
+
+            </div>
             <div className="border-t-[1px] border-gray-200 mt-10 pt-5">
               <div className=" float-left content-center justify-between w-full flex">
-                <button type="submit" className="text-white bg-blue-500 hover:bg-blue-700 font-medium rounded-lg text-sm px-7 w-[200px] py-3 text-center float-left">Next</button>
+                <button type="submit" className="text-white bg-blue-500 hover:bg-blue-700 font-medium rounded-lg text-sm px-7 w-[200px] py-3 text-center float-left">Submit</button>
                 <p className="text-sm text-center text-gray-600 mt-2 float-right">Up next, you`ll receive a confirmation mail
                   with login credentials !
                 </p>
               </div>
             </div>
-
-
-
           </form>
-
         </div>
+
+        <ToastContainer />
+        
         <p className="text-sm text-left text-black my-8"><a className="cursor-pointer hover:text-blue-700 " href='#'> Terms and Conditions</a> | <a className="cursor-pointer hover:text-blue-700" href='#'>Privacy Policy</a></p>
       </section>
     </div>
