@@ -153,7 +153,7 @@ const Signup: React.FC = () => {
     //for handling discount, to check whether the discount code is valid or not
     const handleDiscount = async () => {
         if (!formData.discount) {
-            setMessage('Please enter a discount code.');
+            setMessage('Please enter a discount code');
             return;
         }
 
@@ -175,6 +175,7 @@ const Signup: React.FC = () => {
 
         } catch (error) {
             console.error('Error applying discount:', error);
+            setMessage("Something went wrong")
         }
     }
     const handleTenant = async () => {
@@ -201,6 +202,7 @@ const Signup: React.FC = () => {
 
         } catch (error) {
             console.error('Error applying name', error);
+            setTenantMessage('Something went wrong')
             
         }
     }
@@ -354,7 +356,10 @@ const Signup: React.FC = () => {
                                     Restaurant Name is Valid
                                 </span>
                                 :
-                                ''}
+                                <span className="text-sm text-red-500 dark:text-gray-400">
+                                    {tenantMessage}
+                                </span>
+                                }
                             {errors.restaurantname && <span className="text-sm text-red-500 dark:text-gray-400">{errors.restaurantname}</span>}
                         </div>
 
@@ -384,8 +389,8 @@ const Signup: React.FC = () => {
                                     <span className="text-sm text-red-500 dark:text-gray-400">
                                         Invalid discount code. Please try again
                                     </span>
-                                    : <span className="text-sm text-gray-500 dark:text-gray-400">
-                                        Enter the discount code here
+                                    : <span className="text-sm text-red-500 dark:text-gray-400">
+                                        {message}
                                     </span>
                             }
                         </div>
