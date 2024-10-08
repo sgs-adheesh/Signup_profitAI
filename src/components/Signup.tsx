@@ -42,7 +42,7 @@ const Signup: React.FC = () => {
 
 
     //for validating all the input formats while submit
-    const validate = (): boolean => {
+    const Firstvalidate = (): boolean => {
 
         const newErrors: Partial<Record<keyof SignupForm, string>> = {};
         const phonePattern = /^[0-9]*$/;
@@ -212,7 +212,7 @@ const Signup: React.FC = () => {
         e.preventDefault()
         const formattedPhone = tele ? tele.replace(/^\+1/, '') : '';
         setFormData({ ...formData, phone: formattedPhone });
-        if (validate()) {
+        if (Firstvalidate()) {
             console.log(formData)
             if (executeRecaptcha) {
                 const token = await executeRecaptcha('signup_form');
@@ -351,14 +351,7 @@ const Signup: React.FC = () => {
                                 <span className="text-sm text-red-500 dark:text-gray-400">
                                     Restaurant name already existing
                                 </span>
-                                : tenantMessage === true ?
-                                    <span className="text-sm text-green-500 dark:text-gray-400">
-
-                                    </span>
-                                    :
-                                    <span className="text-sm text-red-500 dark:text-gray-400">
-                                        {tenantMessage}
-                                    </span>
+                                : ''
                             }
                             {errors.restaurantname && <span className="text-sm text-red-500 dark:text-gray-400">{errors.restaurantname}</span>}
                         </div>
