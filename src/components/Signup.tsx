@@ -351,14 +351,7 @@ const Signup: React.FC = () => {
                                 <span className="text-sm text-red-500 dark:text-gray-400">
                                     Restaurant name already existing
                                 </span>
-                                : tenantMessage === true ?
-                                    <span className="text-sm text-green-500 dark:text-gray-400">
-
-                                    </span>
-                                    :
-                                    <span className="text-sm text-red-500 dark:text-gray-400">
-                                        {tenantMessage}
-                                    </span>
+                                : ''
                             }
                             {errors.restaurantname && <span className="text-sm text-red-500 dark:text-gray-400">{errors.restaurantname}</span>}
                         </div>

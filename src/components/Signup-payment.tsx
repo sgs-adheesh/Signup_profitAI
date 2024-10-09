@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { DataContext, PaymentForm } from '../context/SignupContext';
-import { toast, ToastContainer } from 'react-toastify';
+import { Bounce, toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -9,11 +9,12 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Signup_Payment: React.FC = () => {
 
-  useEffect(()=>{
-    if(!formData.restaurantname || !formData.phone){
+  useEffect(() => {
+    if (!formData.restaurantname || !formData.phone || !formData.firstname||!formData.secondname||!formData.email) {
       navigate('/signup')
     }
   })
+
   const context = useContext(DataContext);
   if (!context) {
     throw new Error("YourComponent must be used within a DataProvider");
@@ -162,7 +163,7 @@ const Signup_Payment: React.FC = () => {
       newErrors.expiry = "Expiry date is required.";
     }
     if (!/^(0?[1-9]|1[0-2])\/([0-9]{2}|[0-9]{4})$/.test(paymentDetails.expiry)) {
-      newErrors.expiry ="Month range should be in 01 to 12";
+      newErrors.expiry = "Month range should be in 01 to 12";
     }
     if (!isValidFutureDate(paymentDetails.expiry)) {
       newErrors.expiry = "Please enter a future date"
@@ -203,7 +204,7 @@ const Signup_Payment: React.FC = () => {
       newErrors.zip = "Zip code is required.";
     }
     if (!/^(?!0{5})(?!.*-0{4})(\d{5}(-\d{4})?)$/.test(paymentDetails.zip.toString())) {
-      newErrors.zip ="Zip code format is 12345 or 12345-6789";
+      newErrors.zip = "Zip code format is 12345 or 12345-6789";
     }
 
 
@@ -219,6 +220,9 @@ const Signup_Payment: React.FC = () => {
       try {
         const response = await axios.post(`${API_URL}/test/tenants`, {
           name: formData.restaurantname,
+          firstName:formData.firstname,
+          secondName:formData.secondname,
+          email:formData.email,
           phone: formData.phone,
           businessName: paymentDetails.business_name,
           addressLineOne: paymentDetails.address1,
@@ -227,19 +231,46 @@ const Signup_Payment: React.FC = () => {
           state: paymentDetails.state,
           zipCode: paymentDetails.zip,
         });
-        if(response.data.message){
+        if (response.data.message === "Tenant added successfully") {
           toast.success("Details submitted successfully, You`ll receive a confirmation mail with login credentials", {
-            position: "top-center", 
-            autoClose: false,
-          });
-        }                
-      
+            position: "top-center",
+            autoClose: 7000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
 
+          });
+        }
+        else if (response.data.message === "Failed to add tenant") {
+          toast.warning("Already submitted , Check your mail for login credential", {
+            position: "top-center",
+            autoClose: 7000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+
+          });
+        }
       } catch (error) {
         console.error('Error posting tenant details', error);
         toast.error("Submission failed. Please try again.", {
           position: "top-center",
-          autoClose:false, 
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition:Bounce,
         });
 
       }
@@ -409,7 +440,7 @@ const Signup_Payment: React.FC = () => {
                   name="name"
                   id="name"
                   value={paymentDetails.name}
-                  onChange={(e) => setPaymentDetails({ ...paymentDetails, [e.target.name]: e.target.value})}
+                  onChange={(e) => setPaymentDetails({ ...paymentDetails, [e.target.name]: e.target.value })}
                   onFocus={handleInputFocus}
                   onBlur={() => validateField('name')
 
@@ -620,7 +651,6 @@ const Signup_Payment: React.FC = () => {
         </div>
 
         <ToastContainer />
-        
         <p className="text-sm text-left text-black my-8"><a className="cursor-pointer hover:text-blue-700 " href='#'> Terms and Conditions</a> | <a className="cursor-pointer hover:text-blue-700" href='#'>Privacy Policy</a></p>
       </section>
     </div>

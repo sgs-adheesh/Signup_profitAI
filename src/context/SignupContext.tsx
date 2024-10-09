@@ -50,15 +50,10 @@ interface DataContextType {
     API_URL: string;
     reCaptcheError: string;
     setReCaptcheError: React.Dispatch<React.SetStateAction<string>>;
-    // SITE_KEY: object;
-
 
 }
 
 export const DataContext = createContext<DataContextType | undefined>(undefined);
-
-
-// const site_key = '6LcpeVQqAAAAACczaEFPePOgStVqHCBzGzUy_OF8';
 
 export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [formData, setFormData] = useState<SignupForm>({
@@ -94,7 +89,6 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const navigate = useNavigate()
 
     const API_URL = 'http://localhost:8090/api/v1'
-    // const SITE_KEY = { site_key }
 
     return (
         <DataContext.Provider value={{
@@ -109,9 +103,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             logo, handIcon, paymentIcon,
             axios, API_URL,
             reCaptcheError, setReCaptcheError,
-            // SITE_KEY
         }}>
-
             {children}
         </DataContext.Provider>
     );
