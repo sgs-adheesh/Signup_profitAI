@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { DataContext, PaymentForm } from '../context/SignupContext';
-import { toast, ToastContainer } from 'react-toastify';
+import { Bounce, toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const Signup_Payment: React.FC = () => {
 
   useEffect(() => {
-    if (!formData.restaurantname || !formData.phone) {
+    if (!formData.restaurantname || !formData.phone || !formData.firstname||!formData.secondname||!formData.email) {
       navigate('/signup')
     }
   })
@@ -220,6 +220,9 @@ const Signup_Payment: React.FC = () => {
       try {
         const response = await axios.post(`${API_URL}/test/tenants`, {
           name: formData.restaurantname,
+          firstName:formData.firstname,
+          secondName:formData.secondname,
+          email:formData.email,
           phone: formData.phone,
           businessName: paymentDetails.business_name,
           addressLineOne: paymentDetails.address1,
@@ -238,6 +241,7 @@ const Signup_Payment: React.FC = () => {
             draggable: true,
             progress: undefined,
             theme: "colored",
+            transition: Bounce,
 
           });
         }
@@ -251,6 +255,7 @@ const Signup_Payment: React.FC = () => {
             draggable: true,
             progress: undefined,
             theme: "colored",
+            transition: Bounce,
 
           });
         }
@@ -265,6 +270,7 @@ const Signup_Payment: React.FC = () => {
           draggable: true,
           progress: undefined,
           theme: "colored",
+          transition:Bounce,
         });
 
       }
