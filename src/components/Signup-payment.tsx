@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const Signup_Payment: React.FC = () => {
 
   useEffect(() => {
+    console.log("inside payment useeffect")
     if (!formData.restaurantname || !formData.phone || !formData.firstname||!formData.secondname||!formData.email) {
       navigate('/signup')
     }
@@ -649,9 +650,7 @@ const Signup_Payment: React.FC = () => {
             </div>
           </form>
         </div>
-
         <ToastContainer />
-
         <p className="text-sm text-left text-black my-8"><a className="cursor-pointer hover:text-blue-700 " href='#'> Terms and Conditions</a> | <a className="cursor-pointer hover:text-blue-700" href='#'>Privacy Policy</a></p>
       </section>
     </div>
