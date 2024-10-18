@@ -13,8 +13,8 @@ const App: React.FC = () => {
         <Router>
             <DataProvider>
                 <Routes>               
-                    <Route path="/signup" Component={Signup} />
-                    <Route path="/signup/payment" Component={Signup_Payment} />                
+                    <Route path="/" Component={Signup} />
+                    <Route path="/payment" Component={Signup_Payment} />                
                 </Routes>
             </DataProvider>
         </Router>

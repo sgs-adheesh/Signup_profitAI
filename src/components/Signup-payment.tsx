@@ -11,7 +11,7 @@ const Signup_Payment: React.FC = () => {
 
   useEffect(() => {
     if (!formData.restaurantname || !formData.phone || !formData.firstname||!formData.secondname||!formData.email) {
-      navigate('/signup')
+      navigate('/')
     }
   })
 

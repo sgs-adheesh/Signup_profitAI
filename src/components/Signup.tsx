@@ -225,7 +225,7 @@ const Signup: React.FC = () => {
                 try {
                     // const response = await axios.post(`${API_URL}/signup`, reqData);
                     // console.log('Success:', response.data);
-                    navigate('/signup/payment')
+                    navigate('/payment')
                     // if(response.data){
                     //     navigate('/signup/payment')
                     // }
